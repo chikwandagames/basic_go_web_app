@@ -1,7 +1,9 @@
-package main
+package handlers
 
 import (
 	"net/http"
+
+	"github.com/chikwandagames/basic_go_web_app/pkg/render"
 )
 
 // Home page, Handler function
@@ -9,10 +11,10 @@ import (
 // it has to handle 2 params, ResponseWriter and Request
 // Home is ...
 func Home(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, "home.page.html")
+	render.RenderTemplate(w, "home.page.html")
 }
 
 // About is a handler function
 func About(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, "about.page.html")
+	render.RenderTemplate(w, "about.page.html")
 }
