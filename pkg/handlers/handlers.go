@@ -11,10 +11,25 @@ import (
 // it has to handle 2 params, ResponseWriter and Request
 // Home is ...
 func Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home.page.html")
+	render.RenderTemplateThree(w, "home.page.html")
+	// render.RenderTemplate(w, "home.page.html")
+	// files := []string{
+	// 	"templates/home.page.html",
+	// 	"templates/base.layout.html",
+	// }
+
+	// render.RenderTemplateTwo(w, files...)
+
 }
 
-// About is a handler function
+// About is the handler for the about page
 func About(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "about.page.html")
+	render.RenderTemplateThree(w, "about.page.html")
+	// render.RenderTemplate(w, "about.page.html")
+	// files := []string{
+	// 	"templates/about.page.html",
+	// 	"templates/base.layout.html",
+	// }
+
+	// render.RenderTemplateTwo(w, files...)
 }
