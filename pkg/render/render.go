@@ -7,53 +7,31 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+
+	"github.com/chikwandagames/basic_go_web_app/pkg/config"
 )
 
 // A FuncMap is a map of function that can be used in a template
 var functions = template.FuncMap{}
 
-// RenderTemplate is ...
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
-	// ParseFiles("./templates/" + tmpl), loads the file ./templates folder
-	parsedTemplate, _ := template.ParseFiles("./templates/" + tmpl)
+var app *config.AppConfig
 
-	err := parsedTemplate.Execute(w, nil)
-	if err != nil {
-		fmt.Println("error parsing template:", err)
-		return
-	}
-}
-
-// RendderTemplateTwo is ...
-func RenderTemplateTwo(w http.ResponseWriter, files ...string) {
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-
-	err = ts.Execute(w, nil)
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-	}
+// NewTemplates sets the config for the template package
+func NewTemplates(a *config.AppConfig) {
+	app = a
 }
 
 // RenderTemplateThree is ...
 func RenderTemplateThree(w http.ResponseWriter, tmpl string) {
-	tc, err := CreateTemplateCache()
-	if err != nil {
-		// This will kill n exit the application
-		log.Fatal(err)
-	}
+	// Get the template cache from the app config
+	tc := app.TemplateCache
 
 	// Retrieve the template out of the map
 	// Use comma ok idiom to check if the variable exists
 	t, ok := tc[tmpl]
 	if !ok {
 		// exit
-		log.Fatal(err)
+		log.Fatal("could not get template from cache")
 	}
 
 	// We need to read the template from disk
@@ -63,7 +41,7 @@ func RenderTemplateThree(w http.ResponseWriter, tmpl string) {
 	// Execute the template and store in buf variable
 	_ = t.Execute(buf, nil)
 	// Write to ResponseWriter
-	_, err = buf.WriteTo(w)
+	_, err := buf.WriteTo(w)
 
 	if err != nil {
 		fmt.Println("Error writing template to browser", err)

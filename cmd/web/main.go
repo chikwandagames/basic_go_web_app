@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
+	"github.com/chikwandagames/basic_go_web_app/pkg/config"
 	"github.com/chikwandagames/basic_go_web_app/pkg/handlers"
+	"github.com/chikwandagames/basic_go_web_app/pkg/render"
 )
 
 const portNumber = ":8080"
@@ -13,6 +16,18 @@ const portNumber = ":8080"
 // that package
 
 func main() {
+
+	var app config.AppConfig
+	// Load Templates cache
+	tc, err := render.CreateTemplateCache()
+	if err != nil {
+		log.Fatal("cannot create template cache")
+	}
+	// Store template cache in the app
+	app.TemplateCache = tc
+
+	// Pass the template cache to render package
+	render.NewTemplates(&app)
 
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/about", handlers.About)
