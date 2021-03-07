@@ -22,9 +22,17 @@ func NewTemplates(a *config.AppConfig) {
 }
 
 // RenderTemplateThree is ...
-func RenderTemplateThree(w http.ResponseWriter, tmpl string) {
-	// Get the template cache from the app config
-	tc := app.TemplateCache
+func RenderTemplate(w http.ResponseWriter, tmpl string) {
+
+	// Use the useCache bool to to decide, when in development mode,
+	// dont use template cache, load template from disc
+	var tc map[string]*template.Template
+	if app.UseCache {
+		// Get the template cache from the app config
+		tc = app.TemplateCache
+	} else {
+		tc, _ = CreateTemplateCache()
+	}
 
 	// Retrieve the template out of the map
 	// Use comma ok idiom to check if the variable exists
@@ -45,13 +53,6 @@ func RenderTemplateThree(w http.ResponseWriter, tmpl string) {
 
 	if err != nil {
 		fmt.Println("Error writing template to browser", err)
-	}
-
-	parsedTemplate, _ := template.ParseFiles("./templates/" + tmpl)
-
-	err = parsedTemplate.Execute(w, nil)
-	if err != nil {
-		fmt.Println("error parsing template:", err)
 	}
 
 }

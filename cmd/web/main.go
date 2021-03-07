@@ -18,19 +18,27 @@ const portNumber = ":8080"
 func main() {
 
 	var app config.AppConfig
-	// Load Templates cache
+	// Load Templates cache, when the app starts
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
 	}
 	// Store template cache in the app
 	app.TemplateCache = tc
+	// We use this to load Templates from disc or cache, depending
+	// on weather we in development of production mode
+	app.UseCache = false
+
+	repo := handlers.NewRepo(&app)
+	// Pass ther repo to the handlers
+	handlers.NewHandlers(repo)
 
 	// Pass the template cache to render package
+	// giving the render package access to app (template)
 	render.NewTemplates(&app)
 
-	http.HandleFunc("/", handlers.Home)
-	http.HandleFunc("/about", handlers.About)
+	http.HandleFunc("/", handlers.Repo.Home)
+	http.HandleFunc("/about", handlers.Repo.About)
 	// http.HandleFunc("/base", handlers.Base)
 
 	fmt.Println(fmt.Sprintf("Staring application on port %s", portNumber))
