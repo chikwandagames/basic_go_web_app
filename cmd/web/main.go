@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/chikwandagames/basic_go_web_app/pkg/config"
 	"github.com/chikwandagames/basic_go_web_app/pkg/handlers"
 	"github.com/chikwandagames/basic_go_web_app/pkg/render"
@@ -12,12 +14,32 @@ import (
 
 const portNumber = ":8080"
 
+// Make variable visible throughout the main package
+var app config.AppConfig
+var session *scs.SessionManager
+
 // if A function or variable begins with a CAPITAL, this means its accessible outside
 // that package
 
 func main() {
 
-	var app config.AppConfig
+	// Change this to true when in production
+	app.InProduction = false
+
+	// Initialize session
+	session = scs.New()
+	// How long to I want my sessions to live for, 24 hours
+	session.Lifetime = 24 * time.Hour
+	// Because we are storing our sessions in cookies,
+	// Should the cookies persist after the browser window is closed??
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	// For cookie incryption, https
+	session.Cookie.Secure = app.InProduction
+
+	// For session accessibily globally
+	app.Session = session
+
 	// Load Templates cache, when the app starts
 	tc, err := render.CreateTemplateCache()
 	if err != nil {

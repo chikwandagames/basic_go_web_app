@@ -29,8 +29,16 @@ func NoSurf(next http.Handler) http.Handler {
 		HttpOnly: true,
 		// "/" means the entire site
 		Path:     "/",
-		Secure:   false, // Not https
+		Secure:   app.InProduction, // Not https
 		SameSite: http.SameSiteLaxMode,
 	})
 	return csrfHandler
+}
+
+// SessionLoad LoadAndSave provides middleware which automatically loads
+// and saves session
+// data for the current request, and communicates the session token to and from
+// the client in a cookie.
+func SessionLoad(next http.Handler) http.Handler {
+	return session.LoadAndSave(next)
 }
