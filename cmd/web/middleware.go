@@ -17,6 +17,7 @@ func WriteToConsole(next http.Handler) http.Handler {
 	})
 }
 
+// NoSurf adds CSRF protection to all POST requests
 // NoSurf is for forms, security tocken, cross site request forgery token
 // Its a hidden field in a form, string of random numbrer, which change
 func NoSurf(next http.Handler) http.Handler {
@@ -35,7 +36,8 @@ func NoSurf(next http.Handler) http.Handler {
 	return csrfHandler
 }
 
-// SessionLoad LoadAndSave provides middleware which automatically loads
+// SessionLoad loads and saves the session on every request
+// LoadAndSave provides middleware which automatically loads
 // and saves session
 // data for the current request, and communicates the session token to and from
 // the client in a cookie.
