@@ -1,5 +1,5 @@
-<!-- "base" use the base template, "." include the data thats passed -->
 {{template "base" .}}
+<!-- "base" use the base template, "." include the data thats passed -->
 
 <!-- content will be injected back into the base template -->
 {{define "content"}}
@@ -7,7 +7,8 @@
         <div class="row">
             <div class="col">
                 <h1>This is the about page</h1>
-                <h1>This is the about page</h1>
+                
+                <p>From template data: {{index .StringMap "test" }}</p>
             </div>
         </div>
     </div>

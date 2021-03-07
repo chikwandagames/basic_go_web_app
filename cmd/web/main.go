@@ -39,7 +39,6 @@ func main() {
 
 	http.HandleFunc("/", handlers.Repo.Home)
 	http.HandleFunc("/about", handlers.Repo.About)
-	// http.HandleFunc("/base", handlers.Base)
 
 	fmt.Println(fmt.Sprintf("Staring application on port %s", portNumber))
 

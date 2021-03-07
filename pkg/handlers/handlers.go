@@ -4,14 +4,14 @@ import (
 	"net/http"
 
 	"github.com/chikwandagames/basic_go_web_app/pkg/config"
+	"github.com/chikwandagames/basic_go_web_app/pkg/models"
 	"github.com/chikwandagames/basic_go_web_app/pkg/render"
 )
 
+// Repo is the repository used by handlers
 // Here we use a repository pattern, to help us swap components
 // in and out off the application with minimal changes to the code.
 // We want the handlers to have access to config
-
-// Repo is the repository used by handlers
 var Repo *Repository
 
 // Repository is the repository type
@@ -36,7 +36,8 @@ func NewHandlers(r *Repository) {
 // it has to handle 2 params, ResponseWriter and Request
 // Home is ...
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home.page.html")
+	// &TemplateData{}, empty templateData itme
+	render.RenderTemplate(w, "home.page.html", &models.TemplateData{})
 
 }
 
@@ -44,6 +45,12 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 // Adding the receiver, gives About handler access to everything inside
 // the repository
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "about.page.html")
+	// fmt.Println("about handler called")
+	// render.RenderTemplate(w, "about.page.html", &models.TemplateData{})
+	stringMap := make(map[string]string)
+	stringMap["test"] = "Hello there"
+	render.RenderTemplate(w, "about.page.html", &models.TemplateData{
+		StringMap: stringMap,
+	})
 
 }

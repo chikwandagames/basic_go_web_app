@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/chikwandagames/basic_go_web_app/pkg/config"
+	"github.com/chikwandagames/basic_go_web_app/pkg/models"
 )
 
 // A FuncMap is a map of function that can be used in a template
@@ -21,8 +22,13 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
+// AddDefaultData is for adding data that we need present on every page
+func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+	return td
+}
+
 // RenderTemplateThree is ...
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
+func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
 
 	// Use the useCache bool to to decide, when in development mode,
 	// dont use template cache, load template from disc
@@ -46,8 +52,10 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 	// We need to put that parsed template in memory into some bytes
 	// Buffer to hold bytes
 	buf := new(bytes.Buffer)
+
+	td = AddDefaultData(td)
 	// Execute the template and store in buf variable
-	_ = t.Execute(buf, nil)
+	_ = t.Execute(buf, td)
 	// Write to ResponseWriter
 	_, err := buf.WriteTo(w)
 
