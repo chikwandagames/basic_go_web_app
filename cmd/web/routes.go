@@ -20,6 +20,8 @@ func routes(app *config.AppConfig) http.Handler {
 
 	// Help application, Gracefully absorb panics and prints the stack trace
 	mux.Use(middleware.Recoverer)
+	// Custom middleware
+	mux.Use(WriteToConsole)
 
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/about", handlers.Repo.About)
@@ -27,3 +29,5 @@ func routes(app *config.AppConfig) http.Handler {
 	return mux
 
 }
+
+// Custom middleware that prints to the console each time a page is accessed
