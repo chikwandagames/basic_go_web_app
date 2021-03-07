@@ -37,13 +37,17 @@ func main() {
 	// giving the render package access to app (template)
 	render.NewTemplates(&app)
 
-	http.HandleFunc("/", handlers.Repo.Home)
-	http.HandleFunc("/about", handlers.Repo.About)
-
 	fmt.Println(fmt.Sprintf("Staring application on port %s", portNumber))
 
 	// Start a webserver
-	// _ mean, if theres an error, forget about it
-	_ = http.ListenAndServe(portNumber, nil)
+
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+
+	err = srv.ListenAndServe()
+	// If theres an error
+	log.Fatal(err)
 
 }
