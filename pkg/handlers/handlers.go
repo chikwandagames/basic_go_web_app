@@ -36,7 +36,10 @@ func NewHandlers(r *Repository) {
 // it has to handle 2 params, ResponseWriter and Request
 // Home is ...
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	// &TemplateData{}, empty templateData itme
+	// Get user IP and store in session
+	remoteIP := r.RemoteAddr
+	// Takes a context, key and value of item to store in session
+	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 	render.RenderTemplate(w, "home.page.html", &models.TemplateData{})
 
 }
@@ -49,6 +52,11 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	// render.RenderTemplate(w, "about.page.html", &models.TemplateData{})
 	stringMap := make(map[string]string)
 	stringMap["test"] = "Hello there"
+
+	// Get value stored in session
+	// Use GetString(), that way no need for casting
+	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
+	stringMap["remote_ip"] = remoteIP
 
 	render.RenderTemplate(w, "about.page.html", &models.TemplateData{
 		StringMap: stringMap,
